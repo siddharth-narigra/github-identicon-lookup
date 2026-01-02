@@ -119,7 +119,7 @@ def get_real_github_identicon(username, forced_id=None):
 
 if __name__ == "__main__":
     # Generate and display identicon for test user
-    target_user = "SylvanFranklin"
+    target_user = "siddharth-narigra"
     img = get_real_github_identicon(target_user)
     
     plt.figure(figsize=(5, 5))
