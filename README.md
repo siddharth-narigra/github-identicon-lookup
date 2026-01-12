@@ -1,105 +1,99 @@
 # GitHub Identicon Lookup
 
-Because apparently MD5 hashing your user ID and turning it into a 5x5 pixel art masterpiece is what passes for "unique visual identity" in 2026.
+Because apparently taking your User ID, running it through a broken hashing algorithm from the 90s, and vomiting a 5x5 pixel grid onto the screen is what we call "design" now.
 
-Nothing screams "cutting-edge technology" quite like reducing your entire digital persona to the computational equivalent of a Rorschach test designed by a colorblind algorithm.
+This tool exists because you people can't leave well enough alone. You just *had* to know what your default avatar looked like before you uploaded that heavily filtered photo of yourself hiking.
 
-Watch as your GitHub identity gets reduced to a glorified Rubik's cube that nobody asked for but everyone gets anyway. It's like a participation trophy, but uglier and more deterministic.
+Well, here it is. It's ugly. It's mathematical. And it’s strictly deterministic, meaning you were destined to look this pixelated from the moment you created your account.
 
-Powered by the same cryptographic technology your grandma uses to "secure" her email password.
+Powered by **MD5**, the cryptographic equivalent of a wet cardboard lock.
 
 ---
 
-## The "Logic" (It's simple math, try to keep up)
+## The "Logic" (It's 3rd grade math, sit down)
 
-You think these things are arbitrary? **Adorably naive.** Your face is the result of a cold, unfeeling, deterministic calculation. I reverse-engineered this digital astrology chart just to prove it.
+You think random number generators made your avatar? **Cute.** Nothing in your life is unique, not even your pixel art. Your face is the calculated result of a cold, unfeeling database entry. I literally reverse-engineered this digital horoscope just to prove how un-special you are.
 
-### 0. The Input (Who are you, really?)
+### 0. The Input (You are a number to me)
 
-You might think you are `@cool_coder_69`. GitHub disagrees. To the database, you are just an integer.
+You think you're `@ShadowCoder99`? Wrong. To the database, you're just Integer `582910`.
 
 $$
-ID = \text{GitHub\_API}(\text{"username"})
+ID = \text{GitHub\_API}(\text{"your\_dumb\_username"})
 $$
 
-If you change your username, your identicon stays the same. **You cannot run from your past.** This tool accepts either your username (which I look up because I'm nice) or your raw ID (if you're a robot).
+Change your username all you want. Run. Hide. **Your Identicon finds you.** This tool takes your username (because I assume you don't know your own ID) or your raw ID (if you're actually competent).
 
-### 1. The Hashing (The Meat Grinder)
+### 1. The Hashing (The Digital Butcher)
 
-We take that integer **$ID$**, convert it to bytes, and smash it through MD5 to get **$H$**, a 32-character hexadecimal string. Yes, MD5 is cryptographically broken, but for generating ugly pixel art, it's just fine.
+I take your integer **$ID$**, convert it to bytes, and bludgeon it with **MD5** until it spits out **$H$**, a 32-character hex string. Yes, MD5 is insecure. No, I don't care. It's handling pixel colors, not your banking details (though let's be honest, those are probably `password123`).
 
 $$
 H = \text{MD5}(ID)
 $$
 
-### 2. The Color Extraction (The "Vibe Check")
+### 2. The Color Extraction (The "Judgment")
 
-I don't "choose" a color for you. The algorithm literally judges you based on the **last 7 nibbles** of your hash. It decides if you're a "Depressing Grey" or "Aggressive Salmon."
+I don't "pick" a color. The algorithm literally judges your soul based on the **last 7 nibbles** of your hash. It decides if you deserve "Clinical Depression Blue" or "Radioactive Vomit Green."
 
 $$
 C_{hsl} = f(H_{-7:})
 $$
 
-* **Hue:** Taken from the last 3 nibbles. Pure chaos.
-* **Saturation (**$S$**):** Calculated from nibbles **$H_{-5:-3}$**. I force it into **$[45\%, 65\%]$** using basic arithmetic so you don't look *too* washed out.
-* **Lightness (**$L$**):** Calculated from nibbles **$H_{-7:-5}$**. Constrained to **$[55\%, 75\%]$** so you're visible against a white background. You're welcome.
+* **Hue:** Last 3 nibbles. Pure entropy.
+* **Saturation ($S$):** Calculated from $H_{-5:-3}$. I force it into $[45\%, 65\%]$ because washed-out colors are for weaklings.
+* **Lightness ($L$):** Calculated from $H_{-7:-5}$. Constrained to $[55\%, 75\%]$ so you're actually visible against the white background of the internet's indifference.
 
-### 3. The Shape Construction
+### 3. The Shape Construction (The Rorschach Test)
 
-The pattern isn't random. It's strictly dictated by the  **first 15 nibbles** .
+The pattern isn't random. It is strictly dictated by the **first 15 nibbles** of your hash.
 
 $$
 G_{grid} = H_{0:15}
 $$
 
-I populate a **$5 \times 3$** matrix. For each cell **$(x, y)$**, I check its corresponding nibble **$n$**.
+I populate a **$5 \times 3$** matrix. For each cell $(x, y)$, I check its corresponding nibble $n$.
 
 $$
 \text{Cell}(x, y) = \begin{cases} \text{Color} & \text{if } n \equiv 0 \pmod 2 \quad (\text{even}) \\ \text{Background} & \text{if } n \equiv 1 \pmod 2 \quad (\text{odd}) \end{cases}
 $$
 
-**"But wait,"** you whine, **"that's only half a face!"**
+**"But that's only half a face!"** you scream into the void.
 
-Correct. The final **$5 \times 5$** grid is created by **mirroring** the first two columns. Why? Because humans are biologically hardwired to trust symmetrical things. Without this trick, your avatar would just look like QR code static.
+**Yes.** The final **$5 \times 5$** grid is created by **mirroring** the first two columns. Why? Because human brains are barely evolved monkey-ware that only trusts symmetrical objects. Without this cheap trick, your avatar would look like static noise, and you'd cry.
 
 ---
 
-## The Stack (How I built this monster)
+## The Stack (How I wasted my weekend)
 
-I built this using **Python 3.10+** because I enjoy sensible syntax, and **Streamlit** because life is too short to center a `<div>` in CSS.
+I built this using **Python 3.10+** because I have standards, and **Streamlit** because writing CSS manually is a form of self-harm I don't practice anymore.
 
-* **`streamlit`** : The frontend. It creates the web server so you don't have to touch HTML.
-* **`Pillow` (PIL)** : The artist. It draws the pixels, scales them up, and saves them as PNGs so you can frame them on your wall.
-* **`requests`** : The courier. It bothers the GitHub API to fetch your User ID so you don't have to look it up yourself.
-* **`numpy`** : Overkill? Maybe. But I needed it to manipulate grid arrays, and I like my dependencies heavy.
+* **`streamlit`**: The frontend. It spins up a web server so I don't have to deal with the DOM.
+* **`Pillow` (PIL)**: The artist. It draws pixels, scales them up, and saves them as PNGs so you can print them out and show your mom.
+* **`requests`**: The courier. It harasses the GitHub API so you don't have to `curl` it yourself like a caveman.
+* **`numpy`**: Overkill? Absolutely. But using a C-optimized linear algebra library to color 25 squares makes me feel powerful.
 
 ---
 
 ## Installation (If you must)
 
-You want to run this locally? Fine. But don't blame me if you don't like what you see in the mirror.
+You want to run this locally? Fine. But don't come crying to me when it works perfectly.
 
 ### 1. Clone this repository
 
-(You know how to do this. I'm not pasting the command.)
+(You know how `git clone` works. If you don't, close this tab.)
 
-### 2. Install the requirements
+### 2. Feed the snake
 
-Feed the snake.
-
-**Bash**
-
-```
+```bash
 pip install -r requirements.txt
 ```
 
 ### 3. Run the "App"
 
-This fires up a local web server, usually at `http://localhost:8501`.
+This fires up a server at `http://localhost:8501`. Go there. Click buttons. Be amazed.
 
-**Bash**
-
-```
+```bash
 streamlit run app.py
 ```
 
@@ -107,13 +101,13 @@ streamlit run app.py
 
 ## Usage
 
-1. **Type in a Username:** e.g., `torvalds`.
-2. **Or type in an ID:** e.g., `1` (if you are feeling historical).
+1. **Type in a Username:** e.g., `torvalds` (someone who actually contributed to society).
+2. **Or type in an ID:** e.g., `1` (if you're feeling archaic).
 3. **Witness the Horror:** The app will render your 5x5 identicon in real-time.
-4. **Download:** Click the button to save a high-res `.PNG`. Put it on your resume. confuse HR.
+4. **Download:** Click the button to save a high-res `.PNG`. Put it on your LinkedIn. Confuse recruiters.
 
 ---
 
 ## Disclaimer
 
-*This project is not affiliated with GitHub. It just mocks their design choices with love and mathematical precision. If your identicon is ugly, blame the MD5 collision, not me.*
+*This project is completely unaffiliated with GitHub. It exists solely to mock their aesthetic choices with aggressive mathematical precision. If your identicon is ugly, blame the MD5 collision, or your parents, not me.*
