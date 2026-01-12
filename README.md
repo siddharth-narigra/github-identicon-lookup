@@ -16,10 +16,10 @@ You think random number generators made your avatar? **Cute.** Nothing in your l
 
 ### 0. The Input (You are a number to me)
 
-You think you're `@ShadowCoder99`? Wrong. To the database, you're just Integer `582910`.
+You think you're `@ShadowCoder69`? Wrong. To the database, you're just Integer `582910`.
 
 $$
-ID = \text{GitHub\_API}(\text{"your\_dumb\_username"})
+ID = \text{GitHubAPI}(\text{"your-dumb-username"})
 $$
 
 Change your username all you want. Run. Hide. **Your Identicon finds you.** This tool takes your username (because I assume you don't know your own ID) or your raw ID (if you're actually competent).
