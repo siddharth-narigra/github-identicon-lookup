@@ -26,7 +26,7 @@ Change your username all you want. Run. Hide. **Your Identicon finds you.** This
 
 ### 1. The Hashing (The Digital Butcher)
 
-I take your integer **$ID$**, convert it to bytes, and bludgeon it with **MD5** until it spits out **$H$**, a 32-character hex string. Yes, MD5 is insecure. No, I don't care. It's handling pixel colors, not your banking details (though let's be honest, those are probably `password123`).
+I take your integer $ID$, convert it to bytes, and bludgeon it with **MD5** until it spits out $H$, a 32-character hex string. Yes, MD5 is insecure. No, I don't care. It's handling pixel colors, not your banking details (though let's be honest, those are probably `password123`).
 
 $$
 H = \text{MD5}(ID)
@@ -41,8 +41,8 @@ C_{hsl} = f(H_{-7:})
 $$
 
 * **Hue:** Last 3 nibbles. Pure entropy.
-* **Saturation ($S$):** Calculated from $H_{-5:-3}$. I force it into $[45\%, 65\%]$ because washed-out colors are for weaklings.
-* **Lightness ($L$):** Calculated from $H_{-7:-5}$. Constrained to $[55\%, 75\%]$ so you're actually visible against the white background of the internet's indifference.
+* **Saturation ($S$):** Calculated from $H_{-5:-3}$. I force it into [45%, 65%] because washed-out colors are for weaklings.
+* **Lightness ($L$):** Calculated from $H_{-7:-5}$. Constrained to [55%, 75%] so you're actually visible against the white background of the internet's indifference.
 
 ### 3. The Shape Construction (The Rorschach Test)
 
@@ -52,7 +52,7 @@ $$
 G_{grid} = H_{0:15}
 $$
 
-I populate a **$5 \times 3$** matrix. For each cell $(x, y)$, I check its corresponding nibble $n$.
+I populate a $5 \times 3$ matrix. For each cell $(x, y)$, I check its corresponding nibble $n$.
 
 $$
 \text{Cell}(x, y) = \begin{cases} \text{Color} & \text{if } n \equiv 0 \pmod 2 \quad (\text{even}) \\ \text{Background} & \text{if } n \equiv 1 \pmod 2 \quad (\text{odd}) \end{cases}
@@ -60,7 +60,7 @@ $$
 
 **"But that's only half a face!"** you scream into the void.
 
-**Yes.** The final **$5 \times 5$** grid is created by **mirroring** the first two columns. Why? Because human brains are barely evolved monkey-ware that only trusts symmetrical objects. Without this cheap trick, your avatar would look like static noise, and you'd cry.
+**Yes.** The final $5 \times 5$ grid is created by **mirroring** the first two columns. Why? Because human brains are barely evolved monkey-ware that only trusts symmetrical objects. Without this cheap trick, your avatar would look like static noise, and you'd cry.
 
 ---
 
